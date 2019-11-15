@@ -141,10 +141,10 @@ puts [exec clear]
 puts "\n$LACC$head$RESET\n"
 center "Session started" "$ss(host) @ $ss(y) $ss(m) $ss(d) $ss(time)"
 center "Last login" "$ll(host) @ $ll(y) $ll(m) $ll(d) $ll(time)"
-center "Memory" "$mem(used)/$mem(total) MB ($mem(usedperc)%) in use"
+center "Memory" "$mem(used)/$mem(total) MB ($mem(usedperc)%) used"
 center "$memout" 0
-center "Storage" "$disk(used)/$disk(total) GB ($disk(usedperc)%) in use"
+center "Storage" "$disk(used)/$disk(total) GB ($disk(usedperc)%) used"
 center "$diskout" 0
-center "Uptime" "$up(days) nap $up(hours)ó $up(mins)p $up(secs)mp"
+center "Uptime" "$up(days) days $up(hours)h $up(mins)m $up(secs)s"
 center "Processes" "$psa running, of which $psu is yours"
 puts ""

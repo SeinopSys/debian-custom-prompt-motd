@@ -27,6 +27,7 @@ if [ "$color_prompt" = yes ]; then
     LRED='\[\033[1;31m\]'
     CYAN='\[\033[36m\]'
     LCYAN='\[\033[1;36m\]'
+    HNAME=$(hostname)
     if [ "$USER" = "root" ]; then
       LACC=$LCYAN
       ACC=$CYAN
@@ -35,7 +36,7 @@ if [ "$color_prompt" = yes ]; then
       ACC=$RED
     fi
 
-    PS1="${RESET}${YELLOW}[\h] ${LACC}${DEBCHR}\u${RESET}"'\$'"${ACC}\w${YELLOW}\$(__git_ps1)${RESET}\n\$ "
+    PS1="${RESET}${YELLOW}[${HNAME^}] ${LACC}${DEBCHR}\u${RESET}"'\$'"${ACC}\w${YELLOW}\$(__git_ps1)${RESET}\n\$ "
 else
     PS1="${DEBCHR}\u$\w\$(__git_ps1) "
 fi

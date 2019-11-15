@@ -14,7 +14,7 @@ Copy the contents of  `.color_prompt` then save
 	$ [ ! -f /usr/share/figlet/roman.flf ] && sudo wget ftp://ftp.figlet.org/pub/figlet/fonts/contributed/roman.flf -P /usr/share/figlet
 	$ sudo nano /etc/motd.tcl
 
-Copy the contents of `motd.tcl`, replace `"YourName"` with whatever you like (~7-8 characters works best) then save
+Copy the contents of `motd.tcl` then save
 
 	$ sudo chmod +x /etc/motd.tcl
 	$ sudo nano /etc/profile

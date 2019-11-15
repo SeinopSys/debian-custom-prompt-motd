@@ -1,6 +1,6 @@
 #!/usr/bin/env tclsh
 # * Config
-set name "YourName"
+set name [string totitle [exec hostname]]
 
 # * Variables
 set var(user) $env(USER)

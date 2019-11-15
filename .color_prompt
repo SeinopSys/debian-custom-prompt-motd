@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+
+DEBCHR="${debian_chroot:+($debian_chroot)}"
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
+    else
+	color_prompt=
+    fi
+fi
+
+# Load in the git branch prompt script.
+source ~/.git-prompt.sh
+
+if [ "$color_prompt" = yes ]; then
+    RESET='\[\033[0m\]'
+    YELLOW='\[\033[1;33m\]'
+    RED='\[\033[31m\]'
+    LRED='\[\033[1;31m\]'
+    CYAN='\[\033[36m\]'
+    LCYAN='\[\033[1;36m\]'
+    if [ "$USER" = "root" ]; then
+      LACC=$LCYAN
+      ACC=$CYAN
+    else
+      LACC=$LRED
+      ACC=$RED
+    fi
+
+    PS1="${RESET}${YELLOW}[\h] ${LACC}${DEBCHR}\u${RESET}"'\$'"${ACC}\w${YELLOW}\$(__git_ps1)${RESET}\n\$ "
+else
+    PS1="${DEBCHR}\u$\w\$(__git_ps1) "
+fi
+unset color_prompt force_color_prompt
+
+# You may uncomment the following lines if you want `ls' to be colorized:
+export LS_OPTIONS='--color=auto'
+eval "`dircolors`"
+alias ls='ls $LS_OPTIONS'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi

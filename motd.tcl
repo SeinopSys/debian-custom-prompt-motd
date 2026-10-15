@@ -25,22 +25,27 @@ if { "$var(user)" eq "root" } {
   set ACC $RED
 }
 
-# * Calculate last login
-set lastlogins [split [exec -- last -F ] "\n"]
-set lastlog    [lindex $lastlogins 1 ]
-set ll(host)   [regsub -all {^.*[-.](\d{1,3})-(\d{1,3})-(\d{1,3})-(\d{1,3}).*$} [lindex $lastlog 2] {\1.\2.\3.\4} ]
-set ll(m)      [lindex $lastlog 4]
-set ll(d)      [lindex $lastlog 5]
-set ll(time)   [lindex $lastlog 6]
-set ll(y)      [lindex $lastlog 7]
+# * Calculate last login & session start
+foreach line [lrange [split [exec lastlog2] "\n"] 1 end] {
+  if {[string match "$var(user) *" $line]} {
+    regexp {^\S+\s+\S+\s+(\S*)\s+\w+\s+(\w+)\s+(\d+)\s+(\d+:\d+:\d+)\s+[+-]\d+\s+(\d{4})$} \
+      $line -> host mon day time year
 
-# * Session start
-set currsess [lindex $lastlogins 0 ]
-set ss(host) [regsub -all {^.*[-.](\d{1,3})-(\d{1,3})-(\d{1,3})-(\d{1,3}).*$} [lindex $currsess 2] {\1.\2.\3.\4} ]
-set ss(m)    [lindex $currsess 4]
-set ss(d)    [lindex $currsess 5]
-set ss(time) [lindex $currsess 6]
-set ss(y)    [lindex $currsess 7]
+    set ll(host) $host
+    set ll(m)    $mon
+    set ll(d)    $day
+    set ll(time) $time
+    set ll(y)    $year
+
+    set ss(host) $host
+    set ss(m)    $mon
+    set ss(d)    $day
+    set ss(time) $time
+    set ss(y)    $year
+
+    break
+  }
+}
 
 # * Calculate current system uptime
 set uptime    [exec -- /usr/bin/cut -d. -f1 /proc/uptime]

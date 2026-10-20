@@ -72,13 +72,17 @@ foreach line [lrange [split [exec lastlog2] "\n"] 1 end] {
 #   pwny  pts/0  185.60.221.4  2026-10-20T23:14:05+0200  - still logged in
 proc recent_logins {user count} {
   set logins {}
-  if {[catch {exec wtmpdb last -n $count --time-format iso $user} out]} {
+  # Fetch extra lines: an imported legacy wtmp can repeat the same login
+  if {[catch {exec wtmpdb last -n [expr {$count + 8}] --time-format iso $user} out]} {
     return $logins
   }
+  set last ""
   foreach line [split $out "\n"] {
     if {[regexp {^\S+\s+\S+\s+(.*?)\s*(\d{4})-(\d\d)-(\d\d)T(\d\d:\d\d:\d\d)[+-]\d{4}\s+-} \
-        $line -> host y m d time]} {
+        $line -> host y m d time] && "$y$m$d$time" ne $last} {
+      set last "$y$m$d$time"
       lappend logins [list $host $y $m $d $time]
+      if {[llength $logins] == $count} break
     }
   }
   return $logins

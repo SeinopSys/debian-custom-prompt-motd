@@ -22,3 +22,15 @@ Copy the contents of `motd.tcl` then save. Optionally copy `motd.conf.example` t
 Add `/etc/motd.tcl` on its own lise at the end
 
 Your prompt and MOTD should be replaced after logging out then back in.
+
+## Keeping a server up to date
+
+Instead of copying `motd.tcl` by hand, clone the repo and symlink it:
+
+	$ sudo git clone https://github.com/SeinopSys/debian-custom-prompt-motd.git /var/debian-custom-prompt-motd
+	$ sudo ln -sf /var/debian-custom-prompt-motd/motd.tcl /etc/motd.tcl
+	$ sudo cp /var/debian-custom-prompt-motd/motd.conf.example /etc/motd.conf
+
+Per-server settings live in `/etc/motd.conf` (not tracked), so updating is just:
+
+	$ sudo git -C /var/debian-custom-prompt-motd pull --ff-only

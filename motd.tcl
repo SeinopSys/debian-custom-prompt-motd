@@ -65,42 +65,29 @@ foreach line [lrange [split [exec lastlog2] "\n"] 1 end] {
   }
 }
 
-# * Session start & previous login from wtmp
-# lastlog2 only keeps the newest login per user and isn't always updated, so
-# the two newest logins are read from wtmp (struct utmp records), newest
-# first: this session, then the one before it. glibc lays the record out as
-# 384 bytes with a 32-bit time on x86_64 and 32-bit systems, and as 400 bytes
-# with a 64-bit time on other 64-bit systems such as aarch64.
+# * Session start & previous login
+# lastlog2 only keeps the newest login per user (and isn't always updated), so
+# the two newest logins come from wtmpdb, newest first: this session, then the
+# one before it. Lines look like:
+#   pwny  pts/0  185.60.221.4  2026-10-20T23:14:05+0200  - still logged in
 proc recent_logins {user count} {
-  global tcl_platform
   set logins {}
-  if {[catch {set f [open /var/log/wtmp rb]}]} {
+  if {[catch {exec wtmpdb last -n $count --time-format iso $user} out]} {
     return $logins
   }
-  if {$tcl_platform(pointerSize) == 8 && $tcl_platform(machine) ne "x86_64"} {
-    set recsize 400
-    set format @0s1@44a32@76a256@344w1
-  } else {
-    set recsize 384
-    set format @0s1@44a32@76a256@340i1
+  foreach line [split $out "\n"] {
+    if {[regexp {^\S+\s+\S+\s+(.*?)\s*(\d{4})-(\d\d)-(\d\d)T(\d\d:\d\d:\d\d)[+-]\d{4}\s+-} \
+        $line -> host y m d time]} {
+      lappend logins [list $host $y $m $d $time]
+    }
   }
-  set size [file size /var/log/wtmp]
-  for {set pos [expr {$size - $size % $recsize - $recsize}]} {$pos >= 0} {incr pos -$recsize} {
-    seek $f $pos
-    binary scan [read $f $recsize] $format type rec_user host sec
-    # type 7 = USER_PROCESS
-    if {$type != 7 || [lindex [split $rec_user \0] 0] ne $user} continue
-    lappend logins [list [lindex [split $host \0] 0] $sec]
-    if {[llength $logins] == $count} break
-  }
-  close $f
   return $logins
 }
 
 proc login_fields {arr login} {
   upvar $arr a
-  lassign [clock format [lindex $login 1] -format {%b %d %H:%M:%S %Y}] a(m) a(d) a(time) a(y)
-  set a(host) [lindex $login 0]
+  lassign $login a(host) a(y) m a(d) a(time)
+  set a(m) [lindex {Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec} [expr {[scan $m %d] - 1}]]
 }
 
 set logins [recent_logins $var(user) 2]

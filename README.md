@@ -10,7 +10,7 @@ Copy the contents of  `.color_prompt` then save
 
 	$ sudo chmod +x ~/.color_prompt
 	$ echo "~/.color_prompt" >> ~/.bashrc
-	$ sudo apt-get install tcl figlet bc -y
+	$ sudo apt-get install tcl figlet bc wtmpdb -y
 	$ [ ! -f /usr/share/figlet/roman.flf ] && sudo wget ftp://ftp.figlet.org/pub/figlet/fonts/contributed/roman.flf -P /usr/share/figlet
 	$ sudo nano /etc/motd.tcl
 

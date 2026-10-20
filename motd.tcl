@@ -6,7 +6,10 @@ set name [string totitle [exec hostname]]
 set var(user) $env(USER)
 set var(path) $env(PWD)
 set var(home) $env(HOME)
-set var(cols) [lindex [exec stty size] 1]
+if {[catch {set var(cols) [lindex [exec stty size < /dev/tty] 1]}] || ![string is integer -strict $var(cols)] || $var(cols) < 1} {
+  # No controlling terminal (e.g. non-interactive session)
+  set var(cols) [expr {[info exists env(COLUMNS)] && [string is integer -strict $env(COLUMNS)] ? $env(COLUMNS) : 80}]
+}
 set RED      "\033\[31m"
 set GREEN    "\033\[32m"
 set YELLOW   "\033\[33m"

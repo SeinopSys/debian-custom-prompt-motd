@@ -1,0 +1,13 @@
+# Copy to /etc/motd.conf and uncomment what you want to change.
+# This file is sourced by motd.tcl, so it uses Tcl syntax.
+# Set MOTD_CONF in the environment to read a different path.
+
+# Text rendered in the ASCII header (default: capitalized hostname)
+#set cfg(name) "HammerTime"
+
+# figlet font used for the header (default: roman)
+#set cfg(font) standard
+
+# Only show the MOTD to these users, others exit silently (default: everyone).
+# root is always shown the MOTD.
+#set cfg(allowed_users) {pwny}

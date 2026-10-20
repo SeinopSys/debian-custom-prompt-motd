@@ -14,7 +14,7 @@ Copy the contents of  `.color_prompt` then save
 	$ [ ! -f /usr/share/figlet/roman.flf ] && sudo wget ftp://ftp.figlet.org/pub/figlet/fonts/contributed/roman.flf -P /usr/share/figlet
 	$ sudo nano /etc/motd.tcl
 
-Copy the contents of `motd.tcl` then save
+Copy the contents of `motd.tcl` then save. Optionally copy `motd.conf.example` to `/etc/motd.conf` to set the header name, figlet font, or restrict which users see the MOTD.
 
 	$ sudo chmod +x /etc/motd.tcl
 	$ sudo nano /etc/profile

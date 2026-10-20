@@ -1,6 +1,18 @@
 #!/usr/bin/env tclsh
 # * Config
-set name [string totitle [exec hostname]]
+# Defaults, override any of these in /etc/motd.conf (see motd.conf.example)
+set cfg(name)          [string totitle [exec hostname]]
+set cfg(font)          roman
+set cfg(allowed_users) {}  ;# empty = every user; root is always allowed
+if {[info exists env(MOTD_CONF)]} {
+  set conf $env(MOTD_CONF)
+} else {
+  set conf /etc/motd.conf
+}
+if {[file readable $conf]} {
+  source $conf
+}
+set name $cfg(name)
 
 # * Variables
 set var(user) $env(USER)
@@ -24,6 +36,9 @@ if { "$var(user)" eq "root" } {
   set LACC $LCYAN
   set ACC $CYAN
 } else {
+  if {[llength $cfg(allowed_users)] > 0 && $var(user) ni $cfg(allowed_users)} {
+    exit 0
+  }
   set LACC $LRED
   set ACC $RED
 }
@@ -117,7 +132,7 @@ if [expr $psu < 2] {
 }
 
 # * ASCII head
-set head [string trimright [exec -- figlet $name -ct -f roman ] "\n "]
+set head [string trimright [exec -- figlet $name -ct -f $cfg(font) ] "\n "]
 
 proc center {name data} {
     global ACC

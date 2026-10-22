@@ -199,7 +199,9 @@ proc center {name data} {
 }
 
 # * Print Output
-puts [exec clear]
+if {![catch {exec test -t 1 >@stdout}] && [info exists ::env(TERM)] && $::env(TERM) ne "unknown"} {
+    catch {puts [exec clear]}
+}
 puts "\n$LACC$head$RESET\n"
 center "Session started" "$ss(host) @ $ss(y) $ss(m) $ss(d) $ss(time)"
 center "Last login" "$ll(host) @ $ll(y) $ll(m) $ll(d) $ll(time)"

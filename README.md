@@ -2,6 +2,7 @@
 
 ## Installation instructions for Debian:
 
+	$ sudo apt install tcl lastlog2 bc figlet
 	$ curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.git-prompt.sh
 	$ sudo chmod +x ~/.git-prompt.sh
 	$ nano ~/.color_prompt
